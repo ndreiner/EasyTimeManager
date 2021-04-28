@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Additional Window</title>
+</head>
+
+<body>
+    <form>
+        <div>
+            <label>Enter Task</label>
+            <input type="text" id='item' autofocus>
+        </div>
+        <button type ="submit"> Submit </button>
+    </form>
+
+    <script>
+        const electron = require('electron');
+        //const FlexSearch = require('flexsearch');
+        const {ipcRenderer} = electron;
+        
+        // close Window on escapekey
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                window.close();
+            }
+        })
+
+
+        const form = document.querySelector('form');
+        form.addEventListener('submit',submitForm);
+        //form.addEventListener('keydown',suggest)
+
+
+
+        function submitForm(submitevent){
+            submitevent.preventDefault();
+            let item = new Object();
+            item.name = document.querySelector('#item').value;
+            item.timestamp = new Date();
+
+            ipcRenderer.send('item:add', item); // analogous to socket.io
+        }
+
+
+/*
+        function suggest(e){
+            const query = document.querySelector('#item').value;
+            index.search(query,function(result){
+            console.log(result);
+            });
+        }
+       
+*/
+
+    </script>
+
+</body>
+</html>

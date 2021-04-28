@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <title>Time Logger</title>
+</head>
+<body>
+    <div id ='disp-datetime'> j </div>
+    <dic id ='task-table'>waiting for Elements</dic>
+
+</body>
+<script>
+    const electron = require('electron');
+    const {ipcRenderer} = electron;
+    const  Tabulator = require('tabulator-tables');
+
+    const htmlTable = document.getElementById('task-table');
+    const htTablBod = document.getElementById('task-body');
+    // insert empty Oldrow variable
+    let oldRow = null;
+
+/*
+    ipcRenderer.on('item:add', function(e, item){
+        if(oldRow !== null){
+             let endTimeCell = oldRow.insertCell(2);
+             let durationCell = oldRow.insertCell(3);
+             endTimeCell.innerHTML = item.timestamp.toString();
+        }
+        let newRow = htmlTable.insertRow(-1);
+        oldRow = newRow;
+
+        let taskCell = newRow.insertCell(0);
+        let stTimeCell = newRow.insertCell(1);
+
+        taskCell.innerHTML = item.name;
+        stTimeCell.innerHTML = item.timestamp.toString();
+
+    });
+    */
+
+    ipcRenderer.on('taskList:update', function(event, tasklist){
+        console.log(tasklist);
+        let table = new Tabulator('#task-table',{
+            data:JSON.stringify(tasklist),
+            autoColumns:true,
+        });
+    });
+
+    // show current time
+    window.setInterval(function(){
+        let curDate = new Date();
+        curDate = curDate.toString();
+        document.getElementById('disp-datetime').innerHTML = curDate;
+
+
+
+    },1000);
+</script>
+
+</html>
